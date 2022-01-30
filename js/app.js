@@ -49,7 +49,7 @@ function getRequest() {
     if (jsonData.length > 0) {
         let lastElId = jsonData[jsonData.length - 1].id;
         id = lastElId + 1;
-    } else if (jsonData.length === 0 || jsonData === undefined) {
+    } else if (jsonData.length === 0) {
         id = 0;
     }
 
