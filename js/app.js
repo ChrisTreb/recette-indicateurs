@@ -22,9 +22,7 @@ function resetForm() {
 
 // Récupération de la requête
 function getRequest() {
-
     var id;
-
     if (jsonData.length > 0) {
         let lastElId = jsonData[jsonData.length - 1].id;
         id = lastElId + 1;
@@ -50,7 +48,11 @@ function getRequest() {
     switch (selectForm) {
         case "1":
             setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT " + key_1 + "," + key_2 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
+            if (key_3 === "") {
+                data.push("SELECT " + key_1 + "," + key_2 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
+            } else {
+                data.push("SELECT " + key_1 + "," + key_2 + "," + key_3 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
+            }
             break;
         case "2":
             setHiveRequest(data, id, idc, database, table, opcdate);
@@ -58,7 +60,7 @@ function getRequest() {
             break;
         case "3":
             setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT " + key_1 + "," + key_2 + ",COUNT(DISTINCT " + idc + ") FROM " + table + " WHERE opcdate ='" + opcdate + "' GROUP BY " + key_1 + "," + key_2 + ";");
+            data.push("SELECT " + key_1 + "," + key_2 + ",COUNT(DISTINCT " + idc + ") FROM " + table + " WHERE opcdate ='" + opcdate + "' GROUP BY " + key_1 + "," + key_2 + "," + idc + ";");
             break;
         default:
             console.log("Not a good choice...");
@@ -158,14 +160,18 @@ function download(content, fileName, contentType) {
     a.click();
 }
 
-/*
-function onDownload() {
-    download(JSON.stringify(jsonData), "recette.json", "text/plain");
+// Télécharger le fichier Json
+function getJsonFile() {
+    if (jsonData.length > 0) {
+        download(JSON.stringify(jsonData), "recette.json", "json/plain");
+    } else {
+        console.log("jsonData is empty");
+    }
 }
-*/
 
+// Télécharger le fichier CSV
 function getCsvFile() {
-    if (jsonData != null || jsonData != undefined || jsonData === []) {
+    if (jsonData.length > 0) {
         const items = jsonData;
         const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
         const header = Object.keys(items[0]);
@@ -174,6 +180,8 @@ function getCsvFile() {
             ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(';'))
         ].join('\r\n');
 
-        download(csv, "file.csv", "text/plain");
+        download(csv, "recette.csv", "text/csv;encoding:utf-8");
+    } else {
+        console.log("jsonData is empty");
     }
 }
