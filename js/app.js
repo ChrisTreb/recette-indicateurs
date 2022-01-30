@@ -20,7 +20,6 @@ function setLocalStorage(data) {
 // Chargement des données au chargement de la page
 // Depuis le localstorage
 window.onload = function() {
-    jsonData = [];
     var retrievedData = localStorage.getItem("data");
     if (localStorage.getItem("data") != null) {
         var json = JSON.parse(retrievedData);
@@ -28,6 +27,8 @@ window.onload = function() {
         for (let i = 0; i < json.length; i++) {
             displayDataOnLoad(json[i]);
         }
+    } else {
+        json = [];
     }
     jsonData = json;
 };
