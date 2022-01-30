@@ -6,8 +6,31 @@ $(document).ready(function() {
     });
 });
 
+
+// LocalStorage
+const storage = localStorage;
+
 // Données JSON utilisées pour le stockage
-const jsonData = [];
+var jsonData = [];
+
+// Mettre à jour le LocalStorage
+function setLocalStorage(data) {
+    localStorage.setItem('data', JSON.stringify(data));
+}
+
+// Chargement des données au chargement de la page
+// Depuis le localstorage
+window.onload = function() {
+    var retrievedData = localStorage.getItem("data");
+    if (localStorage.getItem("data") != null) {
+        var json = JSON.parse(retrievedData);
+        console.log(json);
+        for (let i = 0; i < json.length; i++) {
+            displayDataOnLoad(json[i]);
+        }
+    }
+    jsonData = json;
+};
 
 // Effacer le formulaire
 function resetForm() {
@@ -104,8 +127,10 @@ function createIdc() {
         }
 
         jsonData.push(idc);
-        //console.log(jsonData);
         displayData(jsonData);
+
+        // Ajout au localstorage
+        setLocalStorage(jsonData);
     }
 }
 
@@ -120,17 +145,35 @@ function displayData(data) {
     container.appendChild(div);
 }
 
+// Affichage des données au chargement
+function displayDataOnLoad(data) {
+    let container = document.getElementById("data-container");
+    let div = document.createElement('div');
+    div.classList.add("indicateur");
+    div.id = "indicateur-" + data.id;
+    div.innerHTML = "<h3>Nom de l'indicateur</h3><p>" + data.indicateur + "</p><h4>Base de donnée</h4><p>" + data.base + "</p><h4>Table</h4><p>" + data.table + "</p>" + "<h4>Date</h4><p>" + data.date + "</p>" + "<h4>Requête</h4><p>" + data.request + "</p><label class='form-label result-label'>Résultat</label><textarea class='form-control' id='textarea-" + data.id + "' placeholder='Collez le résultat de la requête ici'></textarea><button class='btn btn-primary' onclick='setResult(" + data.id + ")'>Ajouter le résultat</button><button id='delete-" + data.id + "' class='btn btn-danger delete-btn' onclick='deleteIdc(" + data.id + ")'>Supprimer</button>";
+
+    container.appendChild(div);
+}
+
 // Supprimer un indicateur
 function deleteIdc(id) {
-    for (let i = 0; i < jsonData.length; i++) {
-        if (jsonData[i].id === id) {
-            jsonData.splice(jsonData[i], 1);
+    try {
+        for (let i = 0; i < jsonData.length; i++) {
+            if (jsonData[i].id === id) {
+                jsonData.splice(jsonData[i], 1);
+            }
         }
+
+        let elId = "indicateur-" + id;
+        let idcElement = document.getElementById(elId);
+        idcElement.remove();
+        console.log(jsonData);
+    } catch (e) {
+        console.log(e);
+    } finally {
+        setLocalStorage(jsonData);
     }
-    let elId = "indicateur-" + id;
-    let idcElement = document.getElementById(elId);
-    idcElement.remove();
-    console.log(jsonData);
 }
 
 // Générer les requêtes Oracle à partir de celles Hive
