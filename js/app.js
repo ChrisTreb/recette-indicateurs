@@ -43,7 +43,6 @@ function getRequest() {
     var database = "Hive";
 
     var data = [];
-    var keys = [key_1, key_2, key_3];
 
     switch (selectForm) {
         case "1":
@@ -56,9 +55,17 @@ function getRequest() {
             break;
         case "2":
             setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + ";");
+            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " > 0;");
             break;
         case "3":
+            setHiveRequest(data, id, idc, database, table, opcdate);
+            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " < 0;");
+            break;
+        case "4":
+            setHiveRequest(data, id, idc, database, table, opcdate);
+            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " is null;");
+            break;
+        case "5":
             setHiveRequest(data, id, idc, database, table, opcdate);
             data.push("SELECT " + key_1 + "," + key_2 + ",COUNT(DISTINCT " + idc + ") FROM " + table + " WHERE opcdate ='" + opcdate + "' GROUP BY " + key_1 + "," + key_2 + "," + idc + ";");
             break;

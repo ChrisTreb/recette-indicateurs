@@ -42,8 +42,10 @@
                         <label for="request" class="form-label">Requête</label>
                         <select id="form-select" class="form-select">
                         <option value="1">Select Limit 5</option>
-                        <option value="2">Select Count</option>
-                        <option value="3">Select Count Distinct</option>
+                        <option value="2">Select Count &gt; 0</option>
+                        <option value="3">Select Count &lt; 0</option>
+                        <option value="4">Select Count is null</option>
+                        <option value="5">Select Count Distinct</option>
                     </select>
                     </div>
                     <div class="mb-3">
@@ -60,14 +62,15 @@
                         <label for="keyfield2" class="form-label">Clé 2</label>
                         <input type="text" class="form-control" id="keyfield2">
                     </div>
-                    <div class="mb-3">
-                        <label for="keyfield3" class="form-label">Clé 3</label>
-                        <input type="text" class="form-control" id="keyfield3">
-                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="keyfield3" class="form-label">Clés supplémentaires</label>
+                    <input type="text" class="form-control" id="keyfield3">
+                    <div id="more-keys" class="form-text">Séparer les valeurs par une virgule.</div>
                 </div>
                 <div id="form-btn">
                     <button onClick="createIdc()" type="submit" class="btn btn-primary">Ajouter</button>
-                    <button onClick="resetForm()" type="button" class="btn btn-primary">Effacer</button>
+                    <button onClick="resetForm()" type="button" class="btn btn-danger">Effacer</button>
                 </div>
             </div>
         </form>
