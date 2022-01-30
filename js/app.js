@@ -6,9 +6,8 @@ $(document).ready(function() {
     });
 });
 
-
 // LocalStorage
-const storage = localStorage;
+var storage = localStorage;
 
 // Données JSON utilisées pour le stockage
 var jsonData = [];
@@ -21,6 +20,7 @@ function setLocalStorage(data) {
 // Chargement des données au chargement de la page
 // Depuis le localstorage
 window.onload = function() {
+    jsonData = [];
     var retrievedData = localStorage.getItem("data");
     if (localStorage.getItem("data") != null) {
         var json = JSON.parse(retrievedData);
@@ -49,7 +49,7 @@ function getRequest() {
     if (jsonData.length > 0) {
         let lastElId = jsonData[jsonData.length - 1].id;
         id = lastElId + 1;
-    } else if (jsonData.length === 0) {
+    } else if (jsonData.length === 0 || jsonData === undefined) {
         id = 0;
     }
 
