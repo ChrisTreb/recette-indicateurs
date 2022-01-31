@@ -201,6 +201,7 @@ function generateOracleRequests() {
                 console.log(jsonData[i]);
             }
         }
+        popupSuccesDisplay("Requêtes Oracle : Chargées")
     } else {
         popupDisplayError("Pas de données disponibles")
         console.log("No data available...");
