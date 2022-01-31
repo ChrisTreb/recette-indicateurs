@@ -1,31 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif !important;
 }
 
 body {
-    background-color: #d2eafb;
+    background-color: #212121;
 }
 
 h1 {
     color: white;
     margin-left: 10px;
     margin-bottom: 20px;
+    color: #FF762E;
 }
 
 h3 {
     font-size: 18px;
     font-weight: bold;
+    color: #FF762E;
 }
 
 h4 {
     font-size: 16px;
     font-weight: bold;
+    color: #FF762E;
 }
 
 p {
     margin-bottom: 0.2rem;
+    color: white;
 }
 
 .row {
@@ -34,15 +40,15 @@ p {
 }
 
 #menu {
-    padding: 2%;
-    z-index: 5;
+    padding: 10%;
+    z-index: 3;
     display: none;
     position: fixed;
     top: 0;
     right: 0;
     height: auto;
     min-height: 100vh;
-    width: 60vw;
+    width: 100vw;
     background-color: rgba(0, 0, 0, 0.9);
 }
 
@@ -51,7 +57,7 @@ label {
 }
 
 .result-label {
-    color: black;
+    color: #FF762E;
     font-weight: bold;
 }
 
@@ -78,12 +84,9 @@ textarea {
     padding: 2%;
     margin: 1%;
     border-radius: 6px;
-    background: linear-gradient(225deg, #e1faff, #bdd3e2);
-    box-shadow: -5px 5px 15px #bfd5e4, 5px -5px 15px #e5ffff;
-}
-
-.delete-btn {
-    margin-left: 5px;
+    border: 2px solid white;
+    -webkit-box-shadow: 8px 7px 10px -1px rgba(0, 0, 0, 0.4);
+    box-shadow: 8px 7px 10px -1px rgba(0, 0, 0, 0.4);
 }
 
 #download {

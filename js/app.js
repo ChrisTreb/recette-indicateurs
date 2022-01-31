@@ -1,11 +1,3 @@
-$(document).ready(function() {
-    // Menu behaviour
-    $("#nav-icon").click(function() {
-        $(this).toggleClass("open");
-        $("#menu").toggle("slow");
-    });
-});
-
 // LocalStorage
 var storage = localStorage;
 
@@ -31,6 +23,9 @@ window.onload = function() {
         json = [];
     }
     jsonData = json;
+    if (jsonData.length > 0) {
+        popupSuccesDisplay("Indicateurs chargés avec succès")
+    }
 };
 
 // Effacer le formulaire
@@ -114,24 +109,28 @@ function setHiveRequest(data, id, idc, database, table, opcdate) {
 // Ajout d'un indicateur dans le tableau JSON
 function createIdc() {
     var data = getRequest();
-
-    // Vérification des données idc
-    if (data != undefined || data != null || data != "") {
-        let idc = {
-            id: data[0],
-            indicateur: data[1],
-            date: data[2],
-            base: data[3],
-            table: data[4],
-            request: data[5],
-            result: ""
+    try {
+        // Vérification des données idc
+        if (data != undefined || data != null || data != "") {
+            let idc = {
+                id: data[0],
+                indicateur: data[1],
+                date: data[2],
+                base: data[3],
+                table: data[4],
+                request: data[5],
+                result: ""
+            }
+            jsonData.push(idc);
+            displayData(jsonData);
         }
-
-        jsonData.push(idc);
-        displayData(jsonData);
-
+    } catch (e) {
+        console.log(e);
+    } finally {
         // Ajout au localstorage
         setLocalStorage(jsonData);
+        // Popup
+        popupSuccesDisplay("Indicateur ajouté avec succès");
     }
 }
 
@@ -141,7 +140,7 @@ function displayData(data) {
     let div = document.createElement('div');
     div.classList.add("indicateur");
     div.id = "indicateur-" + data[data.length - 1].id;
-    div.innerHTML = "<h3>Nom de l'indicateur</h3><p>" + data[data.length - 1].indicateur + "</p><h4>Base de donnée</h4><p>" + data[data.length - 1].base + "</p><h4>Table</h4><p>" + data[data.length - 1].table + "</p>" + "<h4>Date</h4><p>" + data[data.length - 1].date + "</p>" + "<h4>Requête</h4><p>" + data[data.length - 1].request + "</p><label class='form-label result-label'>Résultat</label><textarea class='form-control' id='textarea-" + data[data.length - 1].id + "' placeholder='Collez le résultat de la requête ici'></textarea><button class='btn btn-primary' onclick='setResult(" + data[data.length - 1].id + ")'>Ajouter le résultat</button><button id='delete-" + data[data.length - 1].id + "' class='btn btn-danger delete-btn' onclick='deleteIdc(" + data[data.length - 1].id + ")'>Supprimer</button>";
+    div.innerHTML = "<h3>Nom de l'indicateur</h3><p>" + data[data.length - 1].indicateur + "</p><h4>Base de donnée</h4><p>" + data[data.length - 1].base + "</p><h4>Table</h4><p>" + data[data.length - 1].table + "</p>" + "<h4>Date</h4><p>" + data[data.length - 1].date + "</p>" + "<h4>Requête</h4><p>" + data[data.length - 1].request + "</p><label class='form-label result-label'>Résultat</label><textarea class='form-control' id='textarea-" + data[data.length - 1].id + "' placeholder='Collez le résultat de la requête ici'></textarea><button class='btn' onclick='setResult(" + data[data.length - 1].id + ")'>Ajouter</button><button id='delete-" + data[data.length - 1].id + "' class='btn btn-delete delete-btn' onclick='deleteIdc(" + data[data.length - 1].id + ")'>Supprimer</button>";
 
     container.appendChild(div);
 }
@@ -152,7 +151,7 @@ function displayDataOnLoad(data) {
     let div = document.createElement('div');
     div.classList.add("indicateur");
     div.id = "indicateur-" + data.id;
-    div.innerHTML = "<h3>Nom de l'indicateur</h3><p>" + data.indicateur + "</p><h4>Base de donnée</h4><p>" + data.base + "</p><h4>Table</h4><p>" + data.table + "</p>" + "<h4>Date</h4><p>" + data.date + "</p>" + "<h4>Requête</h4><p>" + data.request + "</p><label class='form-label result-label'>Résultat</label><textarea class='form-control' id='textarea-" + data.id + "' placeholder='Collez le résultat de la requête ici'></textarea><button class='btn btn-primary' onclick='setResult(" + data.id + ")'>Ajouter le résultat</button><button id='delete-" + data.id + "' class='btn btn-danger delete-btn' onclick='deleteIdc(" + data.id + ")'>Supprimer</button>";
+    div.innerHTML = "<h3>Nom de l'indicateur</h3><p>" + data.indicateur + "</p><h4>Base de donnée</h4><p>" + data.base + "</p><h4>Table</h4><p>" + data.table + "</p>" + "<h4>Date</h4><p>" + data.date + "</p>" + "<h4>Requête</h4><p>" + data.request + "</p><label class='form-label result-label'>Résultat</label><textarea class='form-control' id='textarea-" + data.id + "' placeholder='Collez le résultat de la requête ici'></textarea><button class='btn' onclick='setResult(" + data.id + ")'>Ajouter</button><button id='delete-" + data.id + "' class='btn delete-btn btn-delete' onclick='deleteIdc(" + data.id + ")'>Supprimer</button>";
 
     container.appendChild(div);
 }
@@ -174,6 +173,8 @@ function deleteIdc(id) {
         console.log(e);
     } finally {
         setLocalStorage(jsonData);
+        // Show pop up
+        popupSuccesDisplay("Indicateur supprimé avec succès")
     }
 }
 
@@ -187,19 +188,30 @@ function generateOracleRequests() {
             }
         }
     } else {
+
         console.log("No data available...");
     }
 }
 
 // Ajouter le résultat d'une requête
 function setResult(id) {
-    let val = document.getElementById("textarea-" + id).value.replace(/(\r\n|\n|\r)/gm, " ");
-    for (let i = 0; i < jsonData.length; i++) {
-        if (jsonData[i].id === id) {
-            jsonData[i].result = val;
+    try {
+        let val = document.getElementById("textarea-" + id).value.replace(/(\r\n|\n|\r)/gm, " ");
+        if (val != "") {
+            for (let i = 0; i < jsonData.length; i++) {
+                if (jsonData[i].id === id) {
+                    jsonData[i].result = val;
+                    popupSuccesDisplay("Résultat ajouté avec succès");
+                }
+            }
+            console.log(jsonData[id]);
+        } else {
+            // Popup error
+            popupDisplayError("Le champ résultat est vide !");
         }
+    } catch (e) {
+        console.log(e);
     }
-    console.log(jsonData[id]);
 }
 
 // Fonction de téléchargement du fichier JSON
@@ -235,4 +247,15 @@ function getCsvFile() {
     } else {
         console.log("jsonData is empty");
     }
+}
+
+// PopUps behaviour
+function popupSuccesDisplay(message) {
+    $("#popup-message").html(message)
+    $("#popup").fadeIn("slow").delay(1000).fadeOut('fast');
+}
+
+function popupDisplayError(message) {
+    $("#popup-error-message").html(message)
+    $("#popup-error").fadeIn("slow").delay(1000).fadeOut('fast');
 }
