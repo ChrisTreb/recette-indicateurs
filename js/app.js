@@ -63,37 +63,44 @@ function getRequest() {
 
     var data = [];
 
-    switch (selectForm) {
-        case "1":
-            setHiveRequest(data, id, idc, database, table, opcdate);
-            if (key_3 === "") {
-                data.push("SELECT " + key_1 + "," + key_2 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
-            } else {
-                data.push("SELECT " + key_1 + "," + key_2 + "," + key_3 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
-            }
-            break;
-        case "2":
-            setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " > 0;");
-            break;
-        case "3":
-            setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " < 0;");
-            break;
-        case "4":
-            setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " is null;");
-            break;
-        case "5":
-            setHiveRequest(data, id, idc, database, table, opcdate);
-            data.push("SELECT " + key_1 + "," + key_2 + ",COUNT(DISTINCT " + idc + ") FROM " + table + " WHERE opcdate ='" + opcdate + "' GROUP BY " + key_1 + "," + key_2 + "," + idc + ";");
-            break;
-        default:
-            console.log("Not a good choice...");
-    }
-    console.log(data);
+    if (idc != "" && opcdate != "" && table != "" && key_1 != "" && key_2 != "") {
 
-    return data;
+        switch (selectForm) {
+            case "1":
+                setHiveRequest(data, id, idc, database, table, opcdate);
+                if (key_3 === "") {
+                    data.push("SELECT " + key_1 + "," + key_2 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
+                } else {
+                    data.push("SELECT " + key_1 + "," + key_2 + "," + key_3 + "," + idc + " FROM " + table + " WHERE opcdate ='" + opcdate + "' LIMIT 5;");
+                }
+                break;
+            case "2":
+                setHiveRequest(data, id, idc, database, table, opcdate);
+                data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " > 0;");
+                break;
+            case "3":
+                setHiveRequest(data, id, idc, database, table, opcdate);
+                data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " < 0;");
+                break;
+            case "4":
+                setHiveRequest(data, id, idc, database, table, opcdate);
+                data.push("SELECT COUNT(*) FROM " + table + " WHERE opcdate ='" + opcdate + " AND " + idc + " is null;");
+                break;
+            case "5":
+                setHiveRequest(data, id, idc, database, table, opcdate);
+                data.push("SELECT " + key_1 + "," + key_2 + ",COUNT(DISTINCT " + idc + ") FROM " + table + " WHERE opcdate ='" + opcdate + "' GROUP BY " + key_1 + "," + key_2 + "," + idc + ";");
+                break;
+            default:
+                console.log("Not a good choice...");
+        }
+        console.log(data);
+
+        return data;
+    } else {
+        popupDisplayError("Les champs nécéssaire ne sont pas renseignés !");
+        data = null;
+        return data;
+    }
 }
 
 // Formattage de la requete hive
@@ -123,14 +130,15 @@ function createIdc() {
             }
             jsonData.push(idc);
             displayData(jsonData);
+
+            // Popup
+            popupSuccesDisplay("Indicateur ajouté avec succès");
         }
     } catch (e) {
         console.log(e);
     } finally {
         // Ajout au localstorage
         setLocalStorage(jsonData);
-        // Popup
-        popupSuccesDisplay("Indicateur ajouté avec succès");
     }
 }
 
