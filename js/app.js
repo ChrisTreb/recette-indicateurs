@@ -30,13 +30,19 @@ window.onload = function() {
 
 // Effacer le formulaire
 function resetForm() {
-    document.getElementById("indicateur").value = "";
-    document.getElementById("opcdate").value = "";
-    document.getElementById("table").value = "";
-    document.getElementById("keyfield1").value = "";
-    document.getElementById("keyfield2").value = "";
-    document.getElementById("keyfield3").value = "";
-    document.getElementById("form-select").value = "";
+    try {
+        document.getElementById("indicateur").value = "";
+        document.getElementById("opcdate").value = "";
+        document.getElementById("table").value = "";
+        document.getElementById("keyfield1").value = "";
+        document.getElementById("keyfield2").value = "";
+        document.getElementById("keyfield3").value = "";
+        document.getElementById("form-select").value = "";
+    } catch (e) {
+        console.log(e);
+    } finally {
+        popupSuccesDisplay("Formulaire vidé avec succès");
+    }
 }
 
 // Récupération de la requête
@@ -97,7 +103,7 @@ function getRequest() {
 
         return data;
     } else {
-        popupDisplayError("Les champs nécéssaire ne sont pas renseignés !");
+        popupDisplayError("Les champs nécessaires ne sont pas renseignés !");
         data = null;
         return data;
     }
@@ -196,7 +202,7 @@ function generateOracleRequests() {
             }
         }
     } else {
-
+        popupDisplayError("Pas de données disponibles")
         console.log("No data available...");
     }
 }
