@@ -242,6 +242,7 @@ function getJsonFile() {
     if (jsonData.length > 0) {
         download(JSON.stringify(jsonData), "recette.json", "json/plain");
     } else {
+        popupDisplayError("Pas de données JSON")
         console.log("jsonData is empty");
     }
 }
@@ -249,16 +250,20 @@ function getJsonFile() {
 // Télécharger le fichier CSV
 function getCsvFile() {
     if (jsonData.length > 0) {
-        const items = jsonData;
-        const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
-        const header = Object.keys(items[0]);
-        const csv = [
-            header.join(';'), // header row first
-            ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(';'))
-        ].join('\r\n');
+        var csv = "";
+
+        for (let i = 0; i < jsonData.length; i++) {
+            csv += "Indicateur," + jsonData[i].indicateur + "\r\n";
+            csv += "Base de données," + jsonData[i].base + "\r\n";
+            csv += "Table," + jsonData[i].table + "\r\n";
+            csv += "Requête," + jsonData[i].request + "\r\n";
+            csv += "Résultat," + jsonData[i].result + "\r\n";
+            csv += "\r\n";
+        }
 
         download(csv, "recette.csv", "text/csv;encoding:utf-8");
     } else {
+        popupDisplayError("Pas de donnée enregistrée")
         console.log("jsonData is empty");
     }
 }
